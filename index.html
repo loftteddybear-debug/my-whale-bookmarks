@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work Startpage (Light)</title>
+    <style>
+        :root {
+            --bg-color: #f1f5f9;       /* 연한 회청색 바탕 */
+            --container-bg: #ffffff;   /* 순백색 컨테이너 */
+            --card-bg: #f8fafc;        /* 카드 기본 연회색 */
+            --card-hover: #e2e8f0;     /* 마우스 오버 시 약간 어두운 회색 */
+            --text-color: #0f172a;     /* 진한 네이비색 글자 */
+            --text-muted: #64748b;     /* 보조 글자 회색 */
+            --accent-color: #0ea5e9;   /* 활력 있는 하늘색 포인트 */
+            --accent-glow: rgba(14, 165, 233, 0.15);
+            --border-color: #cbd5e1;   /* 부드러운 테두리 선 */
+            --sheet-accent: #10b981;   /* 구글 시트 포인트 초록색 */
+            --sheet-bg: #f0fdf4;       /* 구글 시트 섹션 연초록 바탕 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        header {
+            max-width: 1600px;
+            margin: 0 auto 35px auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #0284c7, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* 실시간 검색창 */
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 25px;
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-color);
+            font-size: 1.05rem;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-glow);
+            background-color: #ffffff;
+        }
+
+        /* 전체 대시보드 반응형 그리드 */
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+        }
+
+        /* 개별 대분류 섹션 */
+        .category-section {
+            background-color: var(--container-bg);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .category-section:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-color);
+        }
+
+        /* 구글시트 하이라이트 스타일 (밝은 연초록 파스텔) */
+        .category-section.sheets-highlight {
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+            background: linear-gradient(145deg, #ffffff, var(--sheet-bg));
+        }
+
+        .category-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #334155;
+        }
+
+        /* 대분류 내부 그리드 */
+        .bookmark-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        /* 북마크 개별 카드 */
+        .bookmark-card {
+            background-color: var(--card-bg);
+            padding: 10px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .bookmark-card:hover {
+            background-color: var(--card-hover);
+            border-color: var(--accent-color);
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 구글 시트 카드 마우스 오버 시 초록색 테두리 피드백 */
+        .sheets-highlight .bookmark-card {
+            background-color: #ffffff;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .sheets-highlight .bookmark-card:hover {
+            border-color: var(--sheet-accent);
+            background-color: var(--sheet-bg);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+        }
+
+        /* 파비콘 이미지 처리 */
+        .bookmark-card img {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            object-fit: contain;
+            background-color: transparent;
+        }
+
+        .bookmark-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 검색 결과 없을 때 표시 */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🚀 MY WORK DASHBOARD</h1>
+        <div class="search-container">
+            <input type="text" id="searchBar" class="search-input" placeholder="이동할 북마크를 검색하세요..." autofocus>
+        </div>
+    </header>
+
+    <main class="dashboard" id="dashboard">
+
+        <!-- 📊 [독립 추가] 구글 시트 & 작업 문서 -->
+        <section class="category-section sheets-highlight">
+            <h2 class="category-title">📊 구글 시트 & 실시간 문서</h2>
+            <div class="bookmark-grid">
+                <a href="https://docs.google.com/spreadsheets/d/18gapV98ngoReMcgL-mhyz_d75HPdwyhPWniFt4KMLPU/edit?pli=1&gid=841053166#gid=841053166" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="">
+                    <span class="bookmark-name" style="color: #047857;">🟢 상품 소싱 업무</span>
+                </a>
+                <a href="https://docs.google.com/spreadsheets/d/1U98HHK46Uqb735GZV8hon5znBB5KVmh4waAl9VlsV6g/edit?gid=1106317127#gid=1106317127" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="">
+                    <span class="bookmark-name" style="color: #047857;">🟢 등록/판매 내역</span>
+                </a>
+                <a href="https://docs.google.com/spreadsheets/d/18_BWTFEu7rTc_CmlfBhw6GQ8deB6J6WP3AW2p1gPn9w/edit?gid=0#gid=0" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="">
+                    <span class="bookmark-name" style="color: #047857;">🟢 브랜드 정보</span>
+                </a>
+               <a href="https://docs.google.com/spreadsheets/d/10BYFo4iXeTlji9xo2JhhaKaNFOJ1Ps6IHTZPOVuN1pE/edit?gid=0#gid=0" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=32" alt="">
+                    <span class="bookmark-name" style="color: #047857;">🟢 Shippping_Rate</span>
+                </a>
+                <a href="https://www.notion.so/1dc3934a55ca80f18871ec3ebc1d594c" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=notion.so&sz=32" alt="">
+                    <span class="bookmark-name">구매대행 정보</span>
+                </a>
+                
+                <a href="https://app.litt.ly/page" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=litt.ly&sz=32" alt="">
+                    <span class="bookmark-name">리틀리 로그인</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🌟 즐겨찾기 & 포털 -->
+        <section class="category-section">
+            <h2 class="category-title">🌟 즐겨찾기 & 포털</h2>
+            <div class="bookmark-grid">
+                <a href="https://m.naver.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=naver.com&sz=32" alt="">
+                    <span class="bookmark-name">NAVER</span>
+                </a>
+                <a href="https://m.daum.net/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=daum.net&sz=32" alt="">
+                    <span class="bookmark-name">Daum</span>
+                </a>
+                <a href="https://www.google.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" alt="">
+                    <span class="bookmark-name">Google</span>
+                </a>
+                <a href="https://m.youtube.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=32" alt="">
+                    <span class="bookmark-name">YouTube</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🧠 AI 도구 -->
+        <section class="category-section">
+            <h2 class="category-title">🧠 AI 도구</h2>
+            <div class="bookmark-grid">
+                <a href="https://www.midjourney.com/explore?tab=top" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=midjourney.com&sz=32" alt="">
+                    <span class="bookmark-name">Midjourney</span>
+                </a>
+                <a href="https://chatgpt.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32" alt="">
+                    <span class="bookmark-name">ChatGPT</span>
+                </a>
+                <a href="https://runwayml.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=runwayml.com&sz=32" alt="">
+                    <span class="bookmark-name">Runway</span>
+                </a>
+                <a href="https://www.perplexity.ai/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=32" alt="">
+                    <span class="bookmark-name">Perplexity</span>
+                </a>
+                <a href="https://chatgpt.com/c/6985ddc0-d39c-83a9-8631-53991252fcb0" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32" alt="">
+                    <span class="bookmark-name">무선 진단 설명</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🔧 유틸리티 & 디자인 -->
+        <section class="category-section">
+            <h2 class="category-title">🔧 디자인 & 유틸리티</h2>
+            <div class="bookmark-grid">
+                <a href="https://www.remove.bg/ko" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=remove.bg&sz=32" alt="">
+                    <span class="bookmark-name">remove bg</span>
+                </a>
+                <a href="https://huggingface.co/spaces/Sanster/iopaint-lama" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=huggingface.co&sz=32" alt="">
+                    <span class="bookmark-name">IOPaint-LaMA</span>
+                </a>
+                <a href="https://marklog.procpa.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=procpa.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">Marklog</span>
+                </a>
+                <a href="https://translate.google.co.kr/?sl=auto&tl=ko&op=translate" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=google.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">구글 번역</span>
+                </a>
+                <a href="https://www.octoparse.com/console/payment-plan/plan-subscription" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=octoparse.com&sz=32" alt="">
+                    <span class="bookmark-name">Octoparse</span>
+                </a>
+                <a href="https://1password.com/ko/pricing/password-manager" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=1password.com&sz=32" alt="">
+                    <span class="bookmark-name">1Password</span>
+                </a>
+                <a href="https://slashpage.com/loftbear?e=1" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=slashpage.com&sz=32" alt="">
+                    <span class="bookmark-name">Loftbear 보안</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🏪 내 스토어 & 셀러 관리 -->
+        <section class="category-section">
+            <h2 class="category-title">🏪 내 스토어 & 셀러센터</h2>
+            <div class="bookmark-grid">
+                <a href="https://sell.smartstore.naver.com/#/home/about" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=smartstore.naver.com&sz=32" alt="">
+                    <span class="bookmark-name">스마트스토어센터</span>
+                </a>
+                <a href="https://wing.coupang.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=coupang.com&sz=32" alt="">
+                    <span class="bookmark-name">Coupang Wing</span>
+                </a>
+                <a href="https://smartstore.naver.com/loftbear" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=smartstore.naver.com&sz=32" alt="">
+                    <span class="bookmark-name">Loftbear 스토어</span>
+                </a>
+                <a href="https://www.esmplus.com/Home/v2" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=esmplus.com&sz=32" alt="">
+                    <span class="bookmark-name">ESM Plus</span>
+                </a>
+                <a href="https://soffice.11st.co.kr/view/main" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=11st.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">11번가 셀러오피스</span>
+                </a>
+                <a href="https://aideer.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=aideer.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">Aideer 솔루션</span>
+                </a>
+                <a href="https://web.croket.co.kr/seller" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=croket.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">내 셀러 활동</span>
+                </a>
+                <a href="https://global.windly.cc/view3/main" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=windly.cc&sz=32" alt="">
+                    <span class="bookmark-name">윈들리 해구대</span>
+                </a>
+                <a href="https://childish-cartoon-c23.notion.site/f8c168aee7114cdca41675f43cb8db4d" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=notion.site&sz=32" alt="">
+                    <span class="bookmark-name">디셀 가이드</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🔍 키워드 & 분석 -->
+        <section class="category-section">
+            <h2 class="category-title">🔍 키워드 & 분석</h2>
+            <div class="bookmark-grid">
+                <a href="https://datalab.naver.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=datalab.naver.com&sz=32" alt="">
+                    <span class="bookmark-name">네이버 데이터랩</span>
+                </a>
+                <a href="https://itemscout.io/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=itemscout.io&sz=32" alt="">
+                    <span class="bookmark-name">아이템스카우트</span>
+                </a>
+                <a href="https://sellochomes.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=sellochomes.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">셀록홈즈</span>
+                </a>
+                <a href="https://sellochomes.co.kr/sellerlife/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=sellochomes.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">셀러라이프</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🛍️ 국내 이커머스 -->
+        <section class="category-section">
+            <h2 class="category-title">🛍️ 국내 이커머스</h2>
+            <div class="bookmark-grid">
+                <a href="https://www.11st.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=11st.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">11번가</span>
+                </a>
+                <a href="https://www.gmarket.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=gmarket.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">G마켓</span>
+                </a>
+                <a href="https://www.coupang.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=coupang.com&sz=32" alt="">
+                    <span class="bookmark-name">쿠팡</span>
+                </a>
+                <a href="https://shopping.naver.com/ns/home" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=shopping.naver.com&sz=32" alt="">
+                    <span class="bookmark-name">네이버+ 스토어</span>
+                </a>
+                <a href="https://www.croket.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=croket.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">크로켓</span>
+                </a>
+                <a href="https://www.auction.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=auction.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">옥션</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 📦 해외 직구 & 배송대행 (일본/글로벌) -->
+        <section class="category-section">
+            <h2 class="category-title">📦 해외 직구 & 배송대행</h2>
+            <div class="bookmark-grid">
+                <a href="https://www.rakuten.co.jp/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=rakuten.co.jp&sz=32" alt="">
+                    <span class="bookmark-name">라쿠텐 재팬</span>
+                </a>
+                <a href="https://zozo.jp/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=zozo.jp&sz=32" alt="">
+                    <span class="bookmark-name">ZOZOTOWN</span>
+                </a>
+                <a href="https://www.eldex.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=eldex.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">엘덱스</span>
+                </a>
+                <a href="https://www.superdelivery.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=superdelivery.com&sz=32" alt="">
+                    <span class="bookmark-name">Super Delivery</span>
+                </a>
+                <a href="https://www.ohmyzip.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=ohmyzip.com&sz=32" alt="">
+                    <span class="bookmark-name">오마이집</span>
+                </a>
+                <a href="https://www.ohmyzip.com/account/signin#none" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=ohmyzip.com&sz=32" alt="">
+                    <span class="bookmark-name">오마이집 로그인</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🌐 아마존 글로벌 -->
+        <section class="category-section">
+            <h2 class="category-title">🌐 아마존 글로벌</h2>
+            <div class="bookmark-grid">
+                <a href="https://www.amazon.com/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.com&sz=32" alt="">
+                    <span class="bookmark-name">아마존 미국</span>
+                </a>
+                <a href="https://www.amazon.co.jp/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.co.jp&sz=32" alt="">
+                    <span class="bookmark-name">아마존 일본</span>
+                </a>
+                <a href="https://www.amazon.co.uk/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.co.uk&sz=32" alt="">
+                    <span class="bookmark-name">아마존 영국</span>
+                </a>
+                <a href="https://www.amazon.de/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.de&sz=32" alt="">
+                    <span class="bookmark-name">아마존 독일</span>
+                </a>
+                <a href="https://www.amazon.nl/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.nl&sz=32" alt="">
+                    <span class="bookmark-name">아마존 네덜란드</span>
+                </a>
+                <a href="https://www.amazon.se/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=amazon.se&sz=32" alt="">
+                    <span class="bookmark-name">아마존 스웨덴</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 🔨 경·공매 & 컬렉션 -->
+        <section class="category-section">
+            <h2 class="category-title">🔨 경·공매 & 수집</h2>
+            <div class="bookmark-grid">
+                <a href="https://new.speedauction.co.kr/" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=speedauction.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">스피드옥션</span>
+                </a>
+                <a href="https://www.onbid.co.kr/op/dsa/main/main.do" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=onbid.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">온비드</span>
+                </a>
+                <a href="https://www.kobay.co.kr/kobay/item/itemList.do?categoryid=0408" class="bookmark-card" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?domain=kobay.co.kr&sz=32" alt="">
+                    <span class="bookmark-name">코베이옥션</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 검색 결과 없음 메시지 -->
+        <div class="no-results" id="noResults">검색 결과와 일치하는 북마크가 없습니다.</div>
+
+    </main>
+
+    <script>
+        // 실시간 검색 기능 구현
+        const searchBar = document.getElementById('searchBar');
+        const cards = document.querySelectorAll('.bookmark-card');
+        const sections = document.querySelectorAll('.category-section');
+        const noResults = document.getElementById('noResults');
+
+        searchBar.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            let totalVisible = 0;
+
+            sections.forEach(section => {
+                const sectionCards = section.querySelectorAll('.bookmark-card');
+                let sectionVisibleCount = 0;
+
+                sectionCards.forEach(card => {
+                    const name = card.querySelector('.bookmark-name').textContent.toLowerCase();
+                    const url = card.href.toLowerCase();
+
+                    if (name.includes(query) || url.includes(query)) {
+                        card.style.display = 'flex';
+                        sectionVisibleCount++;
+                        totalVisible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // 카드가 하나도 매칭되지 않는 섹션은 숨김 처리
+                if (sectionVisibleCount > 0) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            // 검색 결과 없음 예외 처리
+            if (totalVisible === 0 && query !== '') {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+
+        // '/' 키를 누르면 바로 검색창에 포커스가 가도록 편의기능 추가
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== searchBar) {
+                e.preventDefault();
+                searchBar.focus();
+            }
+        });
+    </script>
+</body>
+</html>
